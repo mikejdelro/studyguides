@@ -9,11 +9,11 @@
   - [I. VM Deploy and Secure](#i-vm-deploy-and-secure)
     - [VirtualBox](#virtualbox)
     - [Debian](#debian)
-    - [Installing CentOS 7 on VirtualBox](#installing-centos-7-on-virtualbox)
+    - [Installing Debian on VirtualBox](#installing-debian-on-virtualbox)
       - [Downloading the ISO](#downloading-the-iso)
       - [Installing on VirtualBox](#installing-on-virtualbox)
-    - [Updating CentOS 7](#updating-centos-7)
-    - [Securing CentOS 7](#securing-centos-7)
+    - [Updating Debian](#updating-debian)
+    - [Securing Debian](#securing-debian)
   - [II. Kubernetes](#ii-kubernetes)
     - [What is Kubernetes](#what-is-kubernetes)
     - [](#)
@@ -58,21 +58,21 @@ At the end of documentation, any developer who follows this guide should have or
 ## I. VM Deploy and Secure
 
 ### VirtualBox
-Locally, this guide will try and use an instance of [VirtualBox](https://www.virtualbox.org/) to deploy an instance of CentOS 7.
+Locally, this guide will try and use an instance of [VirtualBox](https://www.virtualbox.org/) to deploy an instance of Debian.
 
 ### Debian
 
 For reference, I am already comfortable in deployment and the data structure of Debian-flavored Linux (*buntu and Kali), so, I'll make use of that familiarity to deploy these tools.
 
-### Installing CentOS 7 on VirtualBox
+### Installing Debian on VirtualBox
 
 #### Downloading the ISO
 
 #### Installing on VirtualBox
 
-### Updating CentOS 7
+### Updating Debian
 
-### Securing CentOS 7
+### Securing Debian
 
 ## II. Kubernetes
 
