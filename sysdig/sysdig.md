@@ -17,7 +17,6 @@
     - [Securing Ubuntu](#securing-ubuntu)
   - [II. Kubernetes](#ii-kubernetes)
     - [What is Kubernetes](#what-is-kubernetes)
-    - [](#)
   - [III. Deploy Kubernetes](#iii-deploy-kubernetes)
   - [IV. Automate Deploy](#iv-automate-deploy)
   - [V. LAMP Stack](#v-lamp-stack)
@@ -79,9 +78,10 @@ For reference, I am already comfortable in deployment and the data structure of 
 
 ### What is Kubernetes
 
-### 
-
 ## III. Deploy Kubernetes
+
+### MicroK8s commands
+`
 
 ## IV. Automate Deploy
 
