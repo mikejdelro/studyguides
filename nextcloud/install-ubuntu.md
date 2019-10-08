@@ -79,4 +79,8 @@ sudo nano /etc/crontab
 ## NGINX? Why not...
 Look, I'm going to use NGINX because it's [2.5x faster](https://www.eschrade.com/page/performance-of-apache-2-4-with-the-event-mpm-compared-to-nginx/) and was generally built out to handle more connections. This is Nextcloud installation is going to be a *file-sharing* site, so I need the throughput of uploading files as well as multiple people downloading files.
 
+## Turn off Apache2
+
+
+
 ## NGINX Installation

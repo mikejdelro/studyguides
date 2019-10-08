@@ -42,15 +42,11 @@ This guide aims to standardize knowledge capture by creating a linear process of
 
 At the end of documentation, any developer who follows this guide should have or should be able to:
 
-1. Deploy a networked VM with WAN/LAN access.
-2. Secure said VM using conventional means.
-3. Deploy Kubernetes on said VM.
-4. Deploy a basic web service in Kubernetes.
-5. Deploy SysDig Falco, monitoring the container for the web service.
-6. Gather and interpret logs provided by SysDig Falco.
-7. Feed the gathered logs of SysDig Falco to an aggregator web service.
-8. Automate all known processes in either scripts or optimized processes.
-
+1. Understand the use and how to set up Docker containers
+2. Deploy a Rails stack (Linux, NGINX, MySQL, Rails) and use it to deploy a basic web service.
+3. Deploy Sysdig Falco
+4. Learn how to create rules for Sysdig Falco
+5. 
 # Requirements
 
 1. Local networked machine that you are able to deploy a VM on, or a purchased VPS KVM commercially available on the internet.
@@ -86,7 +82,7 @@ At the end of documentation, any developer who follows this guide should have or
 
 ## Deploy SysDig Falco
 
-## Create sysdig falco rules
+## Create Sysdig falco rules
 
 ## Kubernetes
 
@@ -96,7 +92,7 @@ At the end of documentation, any developer who follows this guide should have or
 
 ## Automate Deploy
 
-## Deploy LEMR/railsgoat on kubernetes
+## Deploy LEMR/railsgoI'at on kubernetes
 
 ## Deploy sysdig falco
 
