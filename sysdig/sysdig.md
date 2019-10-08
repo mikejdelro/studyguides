@@ -7,27 +7,31 @@
 - [Objectives](#objectives)
 - [Requirements](#requirements)
 - [Phases](#phases)
-  - [I. VM Deploy and Secure](#i-vm-deploy-and-secure)
-    - [VirtualBox](#virtualbox)
-    - [Ubuntu](#ubuntu)
-    - [Installing Ubuntu on VirtualBox](#installing-ubuntu-on-virtualbox)
-      - [Downloading the ISO](#downloading-the-iso)
-      - [Installing on VirtualBox](#installing-on-virtualbox)
-    - [Updating Ubuntu](#updating-ubuntu)
-    - [Securing Ubuntu](#securing-ubuntu)
-  - [II. Kubernetes](#ii-kubernetes)
+  - [Docker](#docker)
+    - [What is Docker](#what-is-docker)
+    - [Installing Docker in OSX](#installing-docker-in-osx)
+  - [LEMR](#lemr)
+    - [What is LEMR](#what-is-lemr)
+    - [NGINX](#nginx)
+    - [Configuring NGINX](#configuring-nginx)
+    - [MySQL](#mysql)
+    - [Configuring MySQL](#configuring-mysql)
+    - [Rails](#rails)
+    - [Configuring Rails](#configuring-rails)
+  - [Deploy LEMR Stack in Docker](#deploy-lemr-stack-in-docker)
+  - [SysDig Falco](#sysdig-falco)
+  - [Deploy SysDig Falco](#deploy-sysdig-falco)
+  - [Create sysdig falco rules](#create-sysdig-falco-rules)
+  - [Kubernetes](#kubernetes)
     - [What is Kubernetes](#what-is-kubernetes)
-  - [III. Deploy Kubernetes](#iii-deploy-kubernetes)
-  - [IV. Automate Deploy](#iv-automate-deploy)
-  - [V. LAMP Stack](#v-lamp-stack)
-  - [VI. Deploy LAMP Stack in Kubernetes](#vi-deploy-lamp-stack-in-kubernetes)
-  - [VII. Deploy Basic Web Service in LAMP Stack](#vii-deploy-basic-web-service-in-lamp-stack)
-  - [VIII. Automate LAMP Stack deploy](#viii-automate-lamp-stack-deploy)
-  - [IX. SysDig Falco](#ix-sysdig-falco)
-  - [X. Deploy SysDig Falco](#x-deploy-sysdig-falco)
-  - [XI. Learn how to Parse SysDig Falco Output](#xi-learn-how-to-parse-sysdig-falco-output)
-  - [XII. Feed SysDig Falco Output to Web Service](#xii-feed-sysdig-falco-output-to-web-service)
-  - [XIII. Automate SysDig Falco Deploy](#xiii-automate-sysdig-falco-deploy)
+  - [Deploy Kubernetes](#deploy-kubernetes)
+  - [Automate Deploy](#automate-deploy)
+  - [Deploy LEMR/railsgoat on kubernetes](#deploy-lemrrailsgoat-on-kubernetes)
+  - [Deploy sysdig falco](#deploy-sysdig-falco)
+  - [Deploy rules on minikube](#deploy-rules-on-minikube)
+  - [Learn how to Parse SysDig Falco Output](#learn-how-to-parse-sysdig-falco-output)
+  - [Kibana](#kibana)
+  - [Feed SysDig Falco Output to Kibana](#feed-sysdig-falco-output-to-kibana)
 - [References](#references)
 
 # Rationale
@@ -51,56 +55,57 @@ At the end of documentation, any developer who follows this guide should have or
 
 1. Local networked machine that you are able to deploy a VM on, or a purchased VPS KVM commercially available on the internet.
 2. Prior knowledge of Linux technology, such as the Linux file directory, `git`, `yum`, text editors, etc.
-3. Time.
 
 # Phases
 
-## I. VM Deploy and Secure
+## Docker
 
-### VirtualBox
-Locally, this guide will try and use an instance of [VirtualBox](https://www.virtualbox.org/) to deploy an instance of Ubuntu.
+### What is Docker
 
-### Ubuntu
+### Installing Docker in OSX
 
-For reference, I am already comfortable in deployment and the data structure of Debian-flavored Linux (Debian, *buntu and Kali), so, I'll make use of that familiarity to deploy these tools. In this instance, I'll be using [Ubuntu Server 18.04.3 LTS](http://releases.ubuntu.com/18.04.3/)
+## LEMR 
 
-### Installing Ubuntu on VirtualBox
+### What is LEMR
 
-#### Downloading the ISO
+### NGINX
 
-#### Installing on VirtualBox
+### Configuring NGINX
 
-### Updating Ubuntu
+### MySQL
 
-### Securing Ubuntu
+### Configuring MySQL
 
-## II. Kubernetes
+### Rails
+
+### Configuring Rails
+
+## Deploy LEMR Stack in Docker
+
+## SysDig Falco
+
+## Deploy SysDig Falco
+
+## Create sysdig falco rules
+
+## Kubernetes
 
 ### What is Kubernetes
 
-## III. Deploy Kubernetes
+## Deploy Kubernetes
 
-### MicroK8s commands
-`
+## Automate Deploy
 
-## IV. Automate Deploy
+## Deploy LEMR/railsgoat on kubernetes
 
-## V. LAMP Stack
+## Deploy sysdig falco
 
-## VI. Deploy LAMP Stack in Kubernetes
+## Deploy rules on minikube
 
-## VII. Deploy Basic Web Service in LAMP Stack
+## Learn how to Parse SysDig Falco Output
 
-## VIII. Automate LAMP Stack deploy
+## Kibana
 
-## IX. SysDig Falco
-
-## X. Deploy SysDig Falco
-
-## XI. Learn how to Parse SysDig Falco Output
-
-## XII. Feed SysDig Falco Output to Web Service
-
-## XIII. Automate SysDig Falco Deploy
+## Feed SysDig Falco Output to Kibana
 
 # References
