@@ -35,9 +35,7 @@ are supported and installed on your system.
 ## Server Security
 
 ```bash
-apt-get install fail2ban -y && \
-sudo touch /etc/fail2ban/jail.local && \
-sudo nano /etc/fail2ban/jail.local
+apt-get install fail2ban -y && sudo nano /etc/fail2ban/jail.local
 ```
 Okay, our first configuration, but before we dive in, an explanation.
 
@@ -71,16 +69,246 @@ Finally, the `enable` command should allow fail2ban to initialize with your syst
 
 ## Scheduled Reboots
 ```bash
-sudo nano /etc/crontab
+sudo crontab -e
 ```
 
+```
+0 4   *   *   *    /sbin/shutdown -r +5
+```
 
 # NGINX
 ## NGINX? Why not...
 Look, I'm going to use NGINX because it's [2.5x faster](https://www.eschrade.com/page/performance-of-apache-2-4-with-the-event-mpm-compared-to-nginx/) and was generally built out to handle more connections. This is Nextcloud installation is going to be a *file-sharing* site, so I need the throughput of uploading files as well as multiple people downloading files.
 
 ## Turn off Apache2
+```bash
+sudo service apache2 stop
+sudo apt remove apache2.*
+sudo apt autoremove
+sudo apt-get remove apache2*
+```
 
 
 
 ## NGINX Installation
+```bash
+sudo apt install nginx
+```
+
+```bash
+sudo systemctl enable nginx && sudo systemctl restart nginx
+```
+
+## MariaDB installation
+```bash
+sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
+sudo add-apt-repository "deb [arch=amd64,arm64,ppc64el] http://mariadb.mirror.liquidtelecom.com/repo/10.4/ubuntu $(lsb_release -cs) main"
+sudo apt update && sudo apt install mariadb-server mariadb-client -y
+```
+
+```bash
+sudo systemctl enable mysql && sudo systemctl restart mysql && sudo mysql_secure_installation
+```
+
+## PHP7.2
+```bash
+sudo add-apt-repository ppa:ondrej/php -y && sudo apt update
+```
+
+```bash
+sudo apt install php7.2 php7.2-fpm php7.2-mysql php-common php7.2-cli php7.2-common php7.2-json php7.2-opcache php7.2-readline php7.2-mbstring php7.2-xml php7.2-gd php7.2-curl php7.2-intl php7.2-imagick php7.2-zip -y
+```
+
+```bash
+sudo systemctl enable php7.2-fpm && sudo systemctl restart php7.2-fpm
+```
+
+## Nextcloud
+```bash
+wget https://download.nextcloud.com/server/releases/latest.zip && unzip latest.zip && sudo mv nextcloud /usr/share/nginx/ && sudo chown www-data:www-data /usr/share/nginx/nextcloud/ -R
+```
+
+## MariaDB setup
+```bash
+sudo mysql -u root
+```
+
+```sql
+create database nextcloud;
+create user nextclouduser@localhost identified by 'h@s4p@55w0rD';
+grant all privileges on nextcloud.* to nextclouduser@localhost identified by 'h@s4p@55w0rD';
+flush privileges;
+exit;
+```
+
+```bash
+sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
+```
+
+```bash
+innodb_file_per_table=1
+log-bin        = /var/log/mysql/mariadb-bin
+log-bin-index  = /var/log/mysql/mariadb-bin.index
+binlog_format  = mixed
+```
+
+```bash
+sudo systemctl restart mysql
+```
+
+## NGINX setup
+
+```bash
+server {
+    listen 80;
+    server_name nextcloud-url;
+
+    # Add headers to serve security related headers
+    add_header X-Content-Type-Options nosniff;
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Robots-Tag none;
+    add_header X-Download-Options noopen;
+    add_header X-Permitted-Cross-Domain-Policies none;
+
+    # Path to the root of your installation
+    root /usr/share/nginx/nextcloud/;
+
+    location = /robots.txt {
+        allow all;
+        log_not_found off;
+        access_log off;
+    }
+
+    # The following 2 rules are only needed for the user_webfinger app.
+    # Uncomment it if you're planning to use this app.
+    #rewrite ^/.well-known/host-meta /public.php?service=host-meta last;
+    #rewrite ^/.well-known/host-meta.json /public.php?service=host-meta-json
+    # last;
+
+    location = /.well-known/carddav {
+        return 301 $scheme://$host/remote.php/dav;
+    }
+    location = /.well-known/caldav {
+       return 301 $scheme://$host/remote.php/dav;
+    }
+
+    location ~ /.well-known/acme-challenge {
+      allow all;
+    }
+
+    # set max upload size
+    client_max_body_size 512M;
+    fastcgi_buffers 64 4K;
+
+    # Disable gzip to avoid the removal of the ETag header
+    gzip off;
+
+    # Uncomment if your server is build with the ngx_pagespeed module
+    # This module is currently not supported.
+    #pagespeed off;
+
+    error_page 403 /core/templates/403.php;
+    error_page 404 /core/templates/404.php;
+
+    location / {
+       rewrite ^ /index.php$uri;
+    }
+
+    location ~ ^/(?:build|tests|config|lib|3rdparty|templates|data)/ {
+       deny all;
+    }
+    location ~ ^/(?:\.|autotest|occ|issue|indie|db_|console) {
+       deny all;
+     }
+
+    location ~ ^/(?:index|remote|public|cron|core/ajax/update|status|ocs/v[12]|updater/.+|ocs-provider/.+|core/templates/40[34])\.php(?:$|/) {
+       include fastcgi_params;
+       fastcgi_split_path_info ^(.+\.php)(/.*)$;
+       fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+       fastcgi_param PATH_INFO $fastcgi_path_info;
+       #Avoid sending the security headers twice
+       fastcgi_param modHeadersAvailable true;
+       fastcgi_param front_controller_active true;
+       fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+       fastcgi_intercept_errors on;
+       fastcgi_request_buffering off;
+    }
+
+    location ~ ^/(?:updater|ocs-provider)(?:$|/) {
+       try_files $uri/ =404;
+       index index.php;
+    }
+
+    # Adding the cache control header for js and css files
+    # Make sure it is BELOW the PHP block
+    location ~* \.(?:css|js)$ {
+        try_files $uri /index.php$uri$is_args$args;
+        add_header Cache-Control "public, max-age=7200";
+        # Add headers to serve security related headers (It is intended to
+        # have those duplicated to the ones above)
+        add_header X-Content-Type-Options nosniff;
+        add_header X-XSS-Protection "1; mode=block";
+        add_header X-Robots-Tag none;
+        add_header X-Download-Options noopen;
+        add_header X-Permitted-Cross-Domain-Policies none;
+        # Optional: Don't log access to assets
+        access_log off;
+   }
+
+   location ~* \.(?:svg|gif|png|html|ttf|woff|ico|jpg|jpeg)$ {
+        try_files $uri /index.php$uri$is_args$args;
+        # Optional: Don't log access to other assets
+        access_log off;
+   }
+}
+```
+
+```bash
+sudo systemctl reload nginx
+```
+
+## Setup SSL
+
+```bash
+sudo add-apt-repository ppa:certbot/certbot && sudo apt update && sudo apt install certbot python-certbot-nginx -y
+```
+
+```bash
+sudo certbot --nginx --agree-tos --redirect --staple-ocsp --email your-email -d your-url
+```
+
+```bash
+sudo mkdir /usr/share/nginx/nextcloud-data && sudo chown www-data:www-data /usr/share/nginx/nextcloud-data -R
+```
+
+```bash
+sudo nano /etc/php/7.2/fpm/pool.d/www.conf
+
+;env[HOSTNAME] = $HOSTNAME
+;env[PATH] = /usr/local/bin:/usr/bin:/bin
+;env[TMP] = /tmp
+;env[TMPDIR] = /tmp
+;env[TEMP] = /tmp
+
+sudo systemctl reload php7.2-fpm
+```
+
+```bash
+sudo nano /etc/php/7.2/fpm/php.ini
+
+memory_limit = 1024M
+
+sudo systemctl reload php7.2-fpm
+```
+
+```bash
+sudo nano /etc/php/7.2/fpm/pool.d/www.conf
+
+pm = dynamic
+pm.max_children = 120
+pm.start_servers = 12
+pm.min_spare_servers = 6
+pm.max_spare_servers = 18
+
+sudo systemctl reload php7.2-fpm
+```
